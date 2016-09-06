@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class MovieAdapter extends ArrayAdapter<Movies> {
+    private boolean mCurrentMovie = true;
 
     /**
      * Create a new {@link MovieAdapter} object.
@@ -44,6 +45,14 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
         // Return the whole book item layout (containing 2 TextViews) so that it can be shown in
         // the ListView.
         return listMoviesView;
+    }
+    public void setCurrentMovie(boolean useCurrentMovie) {
+        mCurrentMovie = useCurrentMovie;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
     }
 }
 

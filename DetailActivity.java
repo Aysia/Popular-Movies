@@ -1,8 +1,10 @@
 package com.linux_girl.popularmovies;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -15,9 +17,17 @@ public class DetailActivity extends AppCompatActivity {
 
         //display DetailFragment
         if (savedInstanceState == null) {
+
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(MainFragment.MOVIE_EXTRA, getIntent().getData());
+            Log.i(LOG_TAG, "LOCATION: " + arguments.toString());
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.movie_details, new DetailFragment())
+                    .add(R.id.activity_detail_container, fragment)
                     .commit();
         }
+
     }
 }
