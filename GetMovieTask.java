@@ -154,7 +154,7 @@ public class GetMovieTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String movieJsonStr ){
         try {
             ArrayList<Movies> movie = getMovieDataFromJson(movieJsonStr);
-            if(movie !=null) {
+            if(movie != null) {
                 MainFragment.setMovieAdapter(movie);
             }
         } catch(JSONException e) {

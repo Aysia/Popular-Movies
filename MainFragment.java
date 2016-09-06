@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment {
 
     private final String LOG_TAG = MainFragment.class.getSimpleName();
-    private static MovieAdapter adapter;
+    static MovieAdapter adapter;
     public static String MOVIE_EXTRA = "";
     static MovieObject obj = new MovieObject();
     public static ArrayList<Movies> movie;
@@ -29,27 +29,11 @@ public class MainFragment extends Fragment {
     public MainFragment() {
     }
 
-    public static void setMovieAdapter(ArrayList<Movies> movie) {
-        adapter.clear();
-        adapter.addAll(movie);
-        adapter.notifyDataSetChanged();
-    }
-
-/*    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setHasOptionsMenu(true);
-        updateMovies();
-    }*/
-
-    @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-
+        adapter = new MovieAdapter(getActivity(), new ArrayList<Movies>());
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        adapter = new MovieAdapter(getActivity(), new ArrayList<Movies>());
 
         // Get a reference to the GridView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.maingrid);
@@ -60,32 +44,20 @@ public class MainFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                Movies currentMovie = adapter.getItem(position);
+                DetailFragment df = new DetailFragment();
 
-                if (MainActivity.mTwoPane) {
-                    //obj = getMovieObject(currentMovie);
-
-                    DetailFragment df = new DetailFragment();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(MOVIE_EXTRA, position);
-                    df.setArguments(bundle);
-
-                } else {
-                    //Go through DetailActivity
-                    Intent i = new Intent(getActivity(), DetailActivity.class);
-                    obj = getMovieObject(currentMovie);
-                    i.putExtra(MOVIE_EXTRA, obj);
-                    startActivity(i);
-                }
+                Bundle bundle = new Bundle();
+                bundle.putInt("POSITION", position);
+                df.setArguments(bundle);
             }
         });
         return rootView;
     }
 
-    public void onItemClick(AdapterView a, View v, int position, long id) {
-        OnMovieSelectedListener listener = (OnMovieSelectedListener) getActivity();
-        listener.OnSelectionChanged(position);
+    public static void setMovieAdapter(ArrayList<Movies> movie) {
+        adapter.clear();
+        adapter.addAll(movie);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -120,7 +92,7 @@ public class MainFragment extends Fragment {
 
     private void updateMovies() {
         GetMovieTask getMovie = new GetMovieTask();
-        movie = new ArrayList<>();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
         getMovie.execute(sortOrder);

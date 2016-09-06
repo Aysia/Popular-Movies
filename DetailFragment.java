@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +36,6 @@ public class DetailFragment extends Fragment {
     private TextView mDateView;
     private TextView mRatingView;
     private MovieObject object;
-    ArrayList<Movies> movie;
 
     final static String KEY_POSITION = "position";
     int mCurrentPosition = -1;
@@ -46,6 +46,19 @@ public class DetailFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            Bundle arguments = getArguments();
+
+            if (arguments != null) {
+                // Update Details
+                int position = arguments.getInt("POSITION");
+                updateDetails(position);
+            } else if (mCurrentPosition != -1) {
+                // Set description based on savedInstanceState defined during onCreateView()
+                updateDetails(mCurrentPosition);
+            }
+        }
 
     }
 
@@ -70,27 +83,13 @@ public class DetailFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // During the startup, we check if there are any arguments passed to the fragment.
-        // onStart() is a good place to do this because the layout has already been
-        // applied to the fragment at this point so we can safely call the method below
-        // that sets the description text
-        Bundle arguments = getArguments();
-        if (arguments != null){
-            // Update Details
-            int position = arguments.getInt(MainFragment.MOVIE_EXTRA);
-            updateDetails(position);
-        } else if(mCurrentPosition != -1){
-            // Set description based on savedInstanceState defined during onCreateView()
-            updateDetails(mCurrentPosition);
-        }
     }
 
 
     public void updateDetails(int position) {
-        MovieAdapter adapter = new MovieAdapter(getActivity(), movie);
-        Movies mMovie = adapter.getItem(position);
-        object = MainFragment.getMovieObject(mMovie);
+
+        Movies currentMovie = MainFragment.adapter.getItem(position);
+        object = MainFragment.getMovieObject(currentMovie);
 
         mTitleView.setText(object.movieTitle);
 
