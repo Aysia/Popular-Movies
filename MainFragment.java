@@ -1,57 +1,98 @@
 package com.linux_girl.popularmovies;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
+
+import com.linux_girl.popularmovies.data.MovieContract;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Movies>{
 
     private final String LOG_TAG = MainFragment.class.getSimpleName();
     static MovieAdapter adapter;
     public static String MOVIE_EXTRA = "";
     static MovieObject obj = new MovieObject();
-    public static ArrayList<Movies> movie;
-
-    private AdapterView.OnItemClickListener listener;
+    ArrayList<Movies> movie;
+    GridView gridView;
+    int mPosition = gridView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
+    private static final int MOVIE_LOADER = 0;
+    GetMovieTask task;
 
     public MainFragment() {
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+    }
+
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+
         adapter = new MovieAdapter(getActivity(), new ArrayList<Movies>());
+
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the GridView, and attach this adapter to it.
-        GridView gridView = (GridView) rootView.findViewById(R.id.maingrid);
+        gridView = (GridView) rootView.findViewById(R.id.maingrid);
         gridView.setAdapter(adapter);
-
-        // Creating the intent to launch detailed view
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
 
-                DetailFragment df = new DetailFragment();
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                Bundle bundle = new Bundle();
-                bundle.putInt("POSITION", position);
-                df.setArguments(bundle);
+                Movies currentMovie = adapter.getItem(position);
+                if (currentMovie != null) {
+                    ((Callback) getActivity())
+                            .onItemSelected(Utils.getMovieObject(currentMovie)
+                            );
+                }
+                mPosition = position;
             }
         });
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    void onLocationChanged( ) {
+        updateMovies();
+        getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
     }
 
     public static void setMovieAdapter(ArrayList<Movies> movie) {
@@ -60,11 +101,6 @@ public class MainFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    /**
-     * Method for when a menu item has been selected
-     *
-     * @param item is the menu item selected
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -82,6 +118,16 @@ public class MainFragment extends Fragment {
             updateMovies();
         }
     }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != GridView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
 
     public void onResume() {
         super.onResume();
@@ -89,30 +135,30 @@ public class MainFragment extends Fragment {
         updateMovies();
     }
 
-
-    private void updateMovies() {
+    public void updateMovies() {
         GetMovieTask getMovie = new GetMovieTask();
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortOrder = prefs.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
         getMovie.execute(sortOrder);
     }
 
-    /**
-     * Method to create a parcelable object (@link MovieObject)
-     *
-     * @return a MovieObject
-     */
-    public static MovieObject getMovieObject(Movies currentMovie) {
+    @Override
+    public Loader<Movies> onCreateLoader(int id, Bundle args) {
 
-        obj.movieId = currentMovie.getMovieId();
-        obj.movieTitle = currentMovie.getMovieTitle();
-        obj.moviePlot = currentMovie.getMoviePlot();
-        obj.userRating = currentMovie.getUserRating();
-        obj.releaseDate = currentMovie.getReleaseDate();
-        obj.imageUrl = currentMovie.getImageUrl();
-
-        return obj;
+        return null;
     }
 
+    @Override
+    public void onLoadFinished(Loader<Movies> loader, Movies data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Movies> loader) {
+
+    }
+
+    public interface Callback {
+        public void onItemSelected(MovieObject object);
+    }
 }

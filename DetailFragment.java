@@ -44,31 +44,8 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if(savedInstanceState != null) {
-            Bundle arguments = getArguments();
-
-            if (arguments != null) {
-                // Update Details
-                int position = arguments.getInt("POSITION");
-                updateDetails(position);
-            } else if (mCurrentPosition != -1) {
-                // Set description based on savedInstanceState defined during onCreateView()
-                updateDetails(mCurrentPosition);
-            }
-        }
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        if (savedInstanceState != null){
-            mCurrentPosition = savedInstanceState.getInt(KEY_POSITION);
-        }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mTitleView = (TextView) rootView.findViewById(R.id.movie_title);
@@ -77,19 +54,24 @@ public class DetailFragment extends Fragment {
         mDateView = (TextView) rootView.findViewById(R.id.release_date);
         mRatingView = (TextView) rootView.findViewById(R.id.user_ratings);
 
+        Bundle arguments = getArguments();
+
+        if (arguments != null) {
+            // Update Details
+            object = arguments.getParcelable(MainFragment.MOVIE_EXTRA);
+            updateDetails(object);
+        } else if (mCurrentPosition != -1) {
+            // Set description based on savedInstanceState defined during onCreateView()
+            updateDetails(object);
+        }
+        if (savedInstanceState != null){
+            mCurrentPosition = savedInstanceState.getInt(KEY_POSITION);
+        }
+
         return rootView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-
-    public void updateDetails(int position) {
-
-        Movies currentMovie = MainFragment.adapter.getItem(position);
-        object = MainFragment.getMovieObject(currentMovie);
+    public void updateDetails(MovieObject object) {
 
         mTitleView.setText(object.movieTitle);
 
@@ -102,6 +84,7 @@ public class DetailFragment extends Fragment {
         mDateView.setText(object.releaseDate);
         mRatingView.setText(object.userRating);
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

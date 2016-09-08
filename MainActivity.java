@@ -1,44 +1,40 @@
 package com.linux_girl.popularmovies;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Movie;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.net.sip.SipAudioCall;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.facebook.stetho.Stetho;
+import com.linux_girl.popularmovies.data.MovieContract;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnMovieSelectedListener {
+public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
 
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     public static boolean mTwoPane;
     public String DETAILFRAGMENT_TAG = "DFTAG";
+    public static ArrayList<Movies> movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
         // Check whether the Activity is using the layout verison with the fragment_container
         // FrameLayout and if so we must add the first fragment
 
-        if (findViewById(R.id.fragment_container) != null) {
+        if (findViewById(R.id.detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
             // in two-pane mode.
@@ -48,38 +44,19 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
             // fragment transaction.
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.detail_fragment, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .replace(R.id.detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
                         .commit();
             }
         } else {
             mTwoPane = false;
-            //getSupportActionBar().setElevation(0f);
+            getSupportActionBar().setElevation(0f);
         }
+
+        MainFragment mainFragment =  ((MainFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_main));
+        mainFragment.updateMovies();
     }
 
-    @Override
-    public void OnSelectionChanged(int movieIndex) {
-        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.detail_fragment);
-
-        if (mTwoPane){
-            // we are in two pane layout
-            detailFragment.updateDetails(movieIndex);
-        } else {
-            DetailFragment newDetailFragment = new DetailFragment();
-            Bundle args = new Bundle();
-
-            args.putInt(DetailFragment.KEY_POSITION, movieIndex);
-            newDetailFragment.setArguments(args);
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the backStack so the User can navigate back
-            fragmentTransaction.replace(R.id.fragment_container,newDetailFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,8 +81,45 @@ public class MainActivity extends AppCompatActivity implements OnMovieSelectedLi
         return super.onOptionsItemSelected(item);
     }
 
-    public void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
+//        String location = Utility.getPreferredLocation( this );
+//        // update the location in our second pane using the fragment manager
+//        if (location != null && !location.equals(mLocation)) {
+//            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+//            if ( null != ff ) {
+//                ff.onLocationChanged();
+//            }
+//            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+//            if ( null != df ) {
+//                df.onLocationChanged(location);
+//            }
+//            mLocation = location;
+//        }
     }
+
+    @Override
+    public void onItemSelected(MovieObject object) {
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putParcelable(MainFragment.MOVIE_EXTRA, object);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(MainFragment.MOVIE_EXTRA, object);
+            startActivity(intent);
+        }
+    }
+
 
 }

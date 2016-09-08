@@ -1,6 +1,7 @@
 package com.linux_girl.popularmovies;
 
-import android.graphics.Movie;
+import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -23,19 +24,12 @@ import java.util.ArrayList;
  * TMDB API and get the json file to read and parse through.
  */
 public class GetMovieTask extends AsyncTask<String, Void, String> {
-    /**
-     * Initialize @link Movie
-     */
-    ArrayList<Movies> movie = new ArrayList<>();
 
-    private ArrayList<Movies> getMovieDataFromJson(String movieJsonStr)
+    public ArrayList<Movies> movie;
+
+    public ArrayList<Movies> getMovieDataFromJson(String movieJsonStr)
             throws JSONException {
-
-        /**
-         * Clear the ArrayList so we start anew
-         */
-        movie.clear();
-
+        ArrayList<Movies> movie = new ArrayList<>();
         // These are the JSONObject constants that need to be extracted
         final String MOVIE_ID = "id";
         final String MOVIE_RESULTS = "results";
@@ -65,6 +59,9 @@ public class GetMovieTask extends AsyncTask<String, Void, String> {
             rating = movieObject.getString(MOVIE_USER_RATINGS);
             date = movieObject.getString(MOVIE_RELEASE_DATE);
             imageUrl = movieObject.getString(MOVIE_POSTER_PATH);
+
+            //insert into database
+            //Utils.insertData(title, plot, rating, date, imageUrl);
 
             // Add the objects to the @link Movies
             movie.add(new Movies(id, title, plot, rating, date, imageUrl));
@@ -153,7 +150,8 @@ public class GetMovieTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String movieJsonStr ){
         try {
-            ArrayList<Movies> movie = getMovieDataFromJson(movieJsonStr);
+            ArrayList<Movies> movie = new ArrayList<>();
+            movie = getMovieDataFromJson(movieJsonStr);
             if(movie != null) {
                 MainFragment.setMovieAdapter(movie);
             }
@@ -161,4 +159,5 @@ public class GetMovieTask extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
     }
+
 }

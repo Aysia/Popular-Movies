@@ -1,64 +1,58 @@
 package com.linux_girl.popularmovies.data;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.net.Uri;
 import android.provider.BaseColumns;
-import android.text.format.Time;
 
 /**
  * Created by Lani on 9/6/2016.
+ * Database Contract for popularmovies
+ * Holds constants needed to create required tables and fields
  */
 public class MovieContract {
 
     /**
-     * Defines table and column names for the movie database.
+     * When a change is made to the database, increment the DATABASE_VERSION
      */
+    public static final int DATABASE_VERSION = 1;
+    // Name of the Database
+    public static final String DATABASE_NAME = "popularmovies.db";
 
-        // The "Content authority" is a name for the entire content provider, similar to the
-        // relationship between a domain name and its website.  A convenient string to use for the
-        // content authority is the package name for the app, which is guaranteed to be unique on the
-        // device.
-        public static final String CONTENT_AUTHORITY = "com.linux-girl.popularmovies.app";
+    private static final String TEXT_TYPE = " TEXT";
+    private static final String COMMA_SEP = ",";
+    private static final String INTEGER = " INT";
 
-        // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
-        // the content provider.
-        public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    // To prevent someone from accidentally instantiating the contract class,
+    // give it an empty constructor.
+    private MovieContract() {
+    }
 
-        // Possible paths (appended to base content URI for possible URI's)
+    /**
+     * Inner class to create the table @TABLE with constants referencing
+     * the columns of @TABLE
+     */
+    public static abstract class Table implements BaseColumns {
+        // Table Name
+        public static final String TABLE_NAME = "Movies";
+        public static final String COLUMN_MOVIE_TITLE = "movie_title";
+        public static final String COLUMN_MOVIE_PLOT = "movie_plot";
+        public static final String COLUMN_MOVIE_RATING = "ratings";
+        public static final String COLUMN_MOVIE_DATE = "release_date";
+        public static final String COLUMN_MOVIE_POSTER = "poster_path";
 
-        public static final String PATH_MOVIES = "movies";
+        /**
+         * create the table based on the global constants and the inner class
+         */
+        public static final String CREATE_TABLE = "CREATE TABLE " +
+                TABLE_NAME + " (" +
+                _ID + " INTEGER PRIMARY KEY," +
+                COLUMN_MOVIE_TITLE + TEXT_TYPE + COMMA_SEP +
+                COLUMN_MOVIE_PLOT + TEXT_TYPE + COMMA_SEP +
+                COLUMN_MOVIE_RATING + TEXT_TYPE + COMMA_SEP +
+                COLUMN_MOVIE_DATE + TEXT_TYPE + COMMA_SEP +
+                COLUMN_MOVIE_POSTER + TEXT_TYPE + ")";
 
-        /* Inner class that defines the table contents of the weather table */
-        public static final class MovieEntry implements BaseColumns {
-
-            public static final Uri CONTENT_URI =
-                    BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
-
-            public static final String CONTENT_TYPE =
-                    ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
-            public static final String CONTENT_ITEM_TYPE =
-                    ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
-
-            public static final String TABLE_NAME = "movies";
-
-            public static final String COLUMN_MOVIE_TITLE = "title";
-
-            // Movie Poster Path
-            public static final String COLUMN_POSTER_PATH = "poster_path";
-
-            // Movie Description
-            public static final String COLUMN_DESCRIPTION = "description";
-
-            // User Ratings
-            public static final String COLUMN_RATINGS = "ratings";
-
-            // Release Date
-            public static final String COLUMN_RELEASE_DATE = "release_date";
-
-            public static Uri buildMovieUri(long id) {
-                return ContentUris.withAppendedId(CONTENT_URI, id);
-            }
-
-        }
+        /**
+         * Constant to delete the tables
+         */
+        public static final String DELETE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
 }
