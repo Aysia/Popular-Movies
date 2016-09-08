@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     public static boolean mTwoPane;
     public String DETAILFRAGMENT_TAG = "DFTAG";
-    public static ArrayList<Movies> movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +43,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             getSupportActionBar().setElevation(0f);
         }
 
+        // Display MainFragment always
         MainFragment mainFragment =  ((MainFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_main));
         mainFragment.updateMovies();
     }
 
 
+    // Menu methods here
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
