@@ -5,12 +5,6 @@ package com.linux_girl.popularmovies;
  */
 public class Utils {
 
-//    private static Context context;
-//
-//    public Utils(Context context){
-//        this.context=context;
-//    }
-
     /**
      * Method to create a parcelable object (@link MovieObject)
      * @return a MovieObject

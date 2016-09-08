@@ -1,10 +1,8 @@
 package com.linux_girl.popularmovies;
 
 
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 

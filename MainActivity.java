@@ -1,20 +1,12 @@
 package com.linux_girl.popularmovies;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.stetho.Stetho;
-import com.linux_girl.popularmovies.data.MovieContract;
 
 import java.util.ArrayList;
 

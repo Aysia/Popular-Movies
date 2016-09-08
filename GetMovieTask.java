@@ -1,7 +1,5 @@
 package com.linux_girl.popularmovies;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;

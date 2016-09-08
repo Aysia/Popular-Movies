@@ -4,7 +4,6 @@ import android.provider.BaseColumns;
 
 /**
  * Created by Lani on 9/6/2016.
- * Database Contract for popularmovies
  * Holds constants needed to create required tables and fields
  */
 public class MovieContract {

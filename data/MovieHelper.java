@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Lani on 9/7/2016.
+ * Database helper
  */
 
 public class MovieHelper extends SQLiteOpenHelper {
