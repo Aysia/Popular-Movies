@@ -6,4 +6,6 @@
     <dimen name="normal_txt">15sp</dimen>
     <dimen name="large_txt">25sp</dimen>
     <dimen name="small_txt">13sp</dimen>
+    <dimen name="detail_margin">8dp</dimen>
+    <dimen name="scrollview_left">2dp</dimen>
 </resources>
