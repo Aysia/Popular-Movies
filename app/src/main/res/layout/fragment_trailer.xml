@@ -7,7 +7,7 @@
     android:id="@+id/trailer_main_container">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="@string/title_trailers"
@@ -17,7 +17,7 @@
         android:padding="12dp" />
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/trailer_view" />
 
