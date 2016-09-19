@@ -5,31 +5,23 @@ package com.linux_girl.popularmovies;
  */
 public class Trailers {
 
-    public final String mId;
     public final String mName;
     public final String mKey;
-    public final String mSite;
 
     /**
      * Construct a new @link Trailer
      */
 
-    public Trailers(String id, String name, String key, String site) {
-        mId = id;
-        mName = name;
-        mKey = key;
-        mSite = site;
+    public Trailers(String name, String key) {
+        this.mName = name;
+        this.mKey = key;
     }
 
-    public String getTrailerId() {
-        return mId;
-    }
     public String getTrailerName() {
         return mName;
     }
     public String getTrailerKey() {
         return mKey;
     }
-    public String getTrailerSite() { return mSite; }
 
 }

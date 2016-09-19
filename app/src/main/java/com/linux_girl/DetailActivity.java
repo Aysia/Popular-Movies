@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 public class DetailActivity extends AppCompatActivity {
 
     private final String LOG_TAG = DetailActivity.class.getSimpleName();
+    public String TRAILERFRAMGMENT_TAG = "TFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +30,22 @@ public class DetailActivity extends AppCompatActivity {
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
 
+            TrailerFragment trailerFragment = new TrailerFragment();
+            trailerFragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.detail_container, fragment)
                     .commit();
 
-        }
-        if(findViewById(R.id.trailer_fragment) != null) {
-            Log.i(LOG_TAG, "Location: trailer fragment found");
+            if (findViewById(R.id.trailer_fragment) != null) {
+                // trailer fragment exists
+                if (savedInstanceState == null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.trailer_fragment, new TrailerFragment(), TRAILERFRAMGMENT_TAG)
+                            .commit();
+                }
+            }
+
         }
 
     }
@@ -44,7 +54,7 @@ public class DetailActivity extends AppCompatActivity {
         TrailerFragment trailerFragment = new TrailerFragment();
 
         Bundle args = new Bundle();
-        args.putString(TrailerFragment.MOVIE_EXTRA, movieId);
+        args.putString(TrailerFragment.MOVIE_ID, movieId);
         trailerFragment.setArguments(args);
     }
 

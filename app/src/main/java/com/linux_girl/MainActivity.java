@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     public boolean mTwoPane;
     public String DETAILFRAGMENT_TAG = "DFTAG";
+    public String TRAILERFRAGMENT_TAG = "TFTAG";
+
 
     // newest file
     @Override
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         // Check whether the Activity is using the layout verison with the fragment_container
         // FrameLayout and if so we must add the first fragment
 
-        if (findViewById(R.id.detail_container) != null) {
+        if (findViewById(R.id.movie_info) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
             // in two-pane mode.
@@ -47,8 +49,16 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             // adding or replacing the detail fragment using a
             // fragment transaction.
             if (savedInstanceState == null) {
+                // replace detail_container in activity_main with DetailFragment and set it's
+                // tag to DFTAG
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+
+                // replace trailer_container in activity_main with TrailerFragment and set it's tag
+                // to TFTAG
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.trailer_container, new TrailerFragment(),TRAILERFRAGMENT_TAG)
                         .commit();
             }
         } else {
@@ -59,13 +69,6 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         MainFragment mainFragment =  ((MainFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_main));
         mainFragment.updateMovies();
-    }
-
-    public boolean checkLayout(Context context) {
-        if (findViewById(R.id.detail_container) != null) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -104,32 +107,38 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             // fragment transaction.
             Bundle args = new Bundle();
             args.putParcelable(MainFragment.MOVIE_EXTRA, object);
-
-            Bundle arguments = new Bundle();
-            arguments.putString(MainFragment.MOVIE_EXTRA,object.movieId);
-
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
-
-            //send argumetns to TrailerFragment as well
-            TrailerFragment trailerFragment = new TrailerFragment();
-            trailerFragment.setArguments(arguments);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
 
+            // In two-pane mode, show the trailer view in this activity by
+            // adding or replacing the trailer fragment using a
+            // fragment transaction
+            Bundle arguments = new Bundle();
+            arguments.putString(TrailerFragment.MOVIE_ID,object.movieId);
+
+            TrailerFragment trailerFragment = new TrailerFragment();
+            trailerFragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.trailer_fragment, trailerFragment, "TFTAG")
+                    .replace(R.id.trailer_container, trailerFragment, TRAILERFRAGMENT_TAG)
                     .commit();
 
         } else {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(MainFragment.MOVIE_EXTRA, object);
             startActivity(intent);
+
+            Intent i = new Intent(this, TrailerActivity.class);
+            i.putExtra(TrailerFragment.MOVIE_ID, object.movieId);
+            startActivity(i);
+
         }
     }
 
+    // Check if there is internet connectivity
     public static boolean isOnline(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -138,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
                 cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
+    //create a movie object
     public static MovieObject getMovieObject(Movies currentMovie) {
         MovieObject obj = new MovieObject();
         obj.movieId = currentMovie.getMovieId();

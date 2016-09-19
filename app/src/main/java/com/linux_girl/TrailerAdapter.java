@@ -1,6 +1,7 @@
 package com.linux_girl.popularmovies;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,22 +20,21 @@ public class TrailerAdapter extends ArrayAdapter<Trailers> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Check if an existing view is being reused, otherwise inflate the view
-        View listView = convertView;
-        if (listView == null) {
-            listView = LayoutInflater.from(getContext()).inflate(
+
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.trailer_item, parent, false);
         }
 
         Trailers currentTrailer = getItem(position);
-        TextView textView = (TextView) listView.findViewById(R.id.trailer_text);
-        String trailer_text = currentTrailer.getTrailerId() + " | ";
-        trailer_text += currentTrailer.getTrailerName() + " | ";
-        trailer_text += currentTrailer.getTrailerKey() + " | ";
-        trailer_text += currentTrailer.getTrailerSite();
-        textView.setText(trailer_text);
 
-        return listView;
+        TextView keyView = (TextView) convertView.findViewById(R.id.trailer_key);
+        keyView.setText(currentTrailer.mKey);
+
+        TextView nameView = (TextView) convertView.findViewById(R.id.trailer_name);
+        nameView.setText(currentTrailer.mName);
+
+        return convertView;
     }
-
 }
 

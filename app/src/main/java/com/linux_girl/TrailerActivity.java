@@ -22,7 +22,7 @@ public class TrailerActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
 
             Bundle args = new Bundle();
-            args.putParcelable(TrailerFragment.MOVIE_EXTRA, getIntent().getParcelableExtra(MainFragment.MOVIE_EXTRA));
+            args.putParcelable(TrailerFragment.MOVIE_ID, getIntent().getParcelableExtra(TrailerFragment.MOVIE_ID));
 
             TrailerFragment trailerFragment = new TrailerFragment();
             trailerFragment.setArguments(args);
@@ -38,53 +38,9 @@ public class TrailerActivity extends AppCompatActivity {
         return trailerAdapter;
     }
 
-
-    public class TrailerObject implements Parcelable {
-        String mId;
-        String mName;
-        String mKey;
-        String mSite;
-
-        public TrailerObject() {
-        }
-
-        public TrailerObject(String id, String name, String key, String site) {
-            this.mId = id;
-            this.mName = name;
-            this.mKey = key;
-            this.mSite = site;
-        }
-
-        public TrailerObject(Parcel in) {
-            mId = in.readString();
-            mName = in.readString();
-            mKey = in.readString();
-            mSite = in.readString();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-            parcel.writeString(mId);
-            parcel.writeString(mName);
-            parcel.writeString(mKey);
-            parcel.writeString(mSite);
-        }
-
-        public final Parcelable.Creator<TrailerObject> CREATOR
-                = new Parcelable.Creator<TrailerObject>() {
-            public TrailerObject createFromParcel(Parcel in) {
-                return new TrailerObject(in);
-            }
-
-            public TrailerObject[] newArray(int size) {
-                return new TrailerObject[size];
-            }
-        };
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }
 

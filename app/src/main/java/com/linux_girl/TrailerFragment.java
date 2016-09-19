@@ -6,34 +6,43 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-public class TrailerFragment extends Fragment {
+public class TrailerFragment extends Fragment implements TrailerTask.TaskListener {
 
-    // Tag for Logs
+
+//    public interface TaskListener {
+//        public void onFinished(ArrayList<Trailers> trailers);
+//    }
+
+    ArrayList<Trailers> trailers;
     String LOG_TAG = TrailerFragment.class.getSimpleName();
 
     final static String KEY_POSITION = "position";
     int mCurrentPosition = -1;
-    static String MOVIE_EXTRA = "";
-    TrailerActivity activity = new TrailerActivity();
-    ListView listView;
-    View rootView;
-    JSONParse jsonParse = new JSONParse();
 
-    ArrayList<Trailers> trailers;
+    static String MOVIE_ID = "";
+
+    View rootView;
+    ListView listView;
     TrailerAdapter trailerAdapter;
+    int currentTrailer;
+
+    TrailerTask task = new TrailerTask(this);
+    DetailActivity detailActivity = new DetailActivity();
+    String mMovieId;
 
     public TrailerFragment() {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onFinished(ArrayList<Trailers> trailers) {
+        insertTrailers(trailers);
 
     }
 
@@ -41,45 +50,42 @@ public class TrailerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_trailer, container, false);
+        rootView = inflater.inflate(R.layout.fragment_trailer, container, false);
+        listView = (ListView) rootView.findViewById(R.id.trailer_list_view);
 
         Bundle arguments = getArguments();
 
-
         if (arguments != null) {
-            String mMovieId = arguments.getString(MainFragment.MOVIE_EXTRA);
-            String uri = "http://api.themoviedb.org/3/movie/" + mMovieId + "/videos?";
+            // Update Details
 
-            jsonParse.execute(mMovieId);
+            mMovieId = arguments.getString(MOVIE_ID);
+            task.execute(mMovieId);
 
-
-
+        } else if (mCurrentPosition != -1) {
+            // Set description based on savedInstanceState defined during onCreateView()
+            task.execute(mMovieId);
         }
 
         if (savedInstanceState != null) {
             mCurrentPosition = savedInstanceState.getInt(KEY_POSITION);
         }
 
-        trailerAdapter = new TrailerAdapter(getContext(), new ArrayList<Trailers>());
-        listView = (ListView) rootView.findViewById(R.id.trailer_view);
-
         return rootView;
     }
 
-    public void setTrailers(ArrayList<Trailers> trailers) {
-        for(Trailers trailer : trailers) {
-            Log.i(LOG_TAG, "TRAILERS" + trailer);
-        }
+    public void insertTrailers(ArrayList<Trailers> trailers) {
 
-        trailerAdapter.addAll(trailers);
-    }
+        /**
+         * Create an {@link TrailerAdapter}, whose data source is a list of
+         * {@link Trailers}. The adapter knows how to create list items for each
+         * item in the list.
+         */
+        trailerAdapter = new TrailerAdapter(getContext(), trailers);
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        // Save the current description selection in case we need to recreate the fragment
-        outState.putInt(KEY_POSITION, mCurrentPosition);
+        /** Set the adapter on the {@link ListView}
+         so the list can be populated in the user interface
+         */
+        listView.setAdapter(trailerAdapter);
     }
 
     @Override
@@ -96,9 +102,11 @@ public class TrailerFragment extends Fragment {
             throw new RuntimeException(e);
         }
     }
-
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the current trailer selection in case we need to recreate the fragment
+        outState.putInt(KEY_POSITION, mCurrentPosition);
     }
 }

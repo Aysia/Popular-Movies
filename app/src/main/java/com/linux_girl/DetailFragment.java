@@ -76,9 +76,6 @@ public class DetailFragment extends Fragment {
         mDateView.setText(object.releaseDate);
         mRatingView.setText(object.userRating);
 
-        DetailActivity activity = new DetailActivity();
-        activity.displayTrailerFragment(getActivity(), object.movieId);
-
     }
 
     @Override

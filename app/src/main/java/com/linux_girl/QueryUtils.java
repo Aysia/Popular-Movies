@@ -154,12 +154,10 @@ public final class QueryUtils {
 
                 // Get the JSONObjects representing a trailer
                 JSONObject theObject = jsonArray.getJSONObject(i);
-                id = theObject.getString(TRAILER_ID);
                 name = theObject.getString(TRAILER_NAME);
                 key = theObject.getString(TRAILER_KEY);
-                site = theObject.getString(TRAILER_SITE);
 
-                trailers.add(new Trailers(id, name, key, site));
+                trailers.add(new Trailers(name, key));
             }
             return trailers;
         } catch (JSONException e) {
