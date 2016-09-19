@@ -85,12 +85,6 @@
             android:textSize="@dimen/normal_txt"
             android:padding="12dp" />
 
-        <fragment
-            android:id="@+id/trailer_fragment"
-            android:name="com.linux_girl.popularmovies.TrailerFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout="@android:layout/list_content" />
 
     </LinearLayout>
 </ScrollView>

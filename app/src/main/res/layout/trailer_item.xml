@@ -8,17 +8,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/trailer_key" />
+        android:id="@+id/trailer_key"
+        android:text="Key Here" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:id="@+id/trailer_name" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/trailer_site"/>
+        android:id="@+id/trailer_name"
+        android:text="Name Here" />
 </LinearLayout>

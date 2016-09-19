@@ -1,11 +1,26 @@
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.linux_girl.popularmovies.DetailActivity"
-    tools:ignore="MergeRootFrame">
+    android:baselineAligned="false"
+    android:divider="?android:attr/dividerVertical"
+    android:orientation="vertical"
+    tools:context="com.linux_girl.popularmovies.DetailActivity">
+
+    <FrameLayout
+        android:id="@+id/detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:paddingLeft="1dp" />
 
 
-</FrameLayout>
+    <fragment
+        android:id="@+id/trailer_fragment"
+        android:name="com.linux_girl.popularmovies.TrailerFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        tools:layout="@android:layout/list_content" />
+
+</LinearLayout>

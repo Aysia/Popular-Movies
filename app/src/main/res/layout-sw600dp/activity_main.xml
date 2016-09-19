@@ -19,11 +19,27 @@
         android:layout_weight="3"
         tools:layout="@android:layout/list_content" />
 
-    <FrameLayout
-        android:id="@+id/detail_container"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:paddingLeft="1dp" />
+        android:orientation="vertical"
+        android:id="@+id/movie_info"
+        android:paddingLeft="1dp"
+        android:divider="?android:attr/dividerVertical">
+
+        <FrameLayout
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6" />
+
+        <FrameLayout
+            android:id="@+id/trailer_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 </LinearLayout>
