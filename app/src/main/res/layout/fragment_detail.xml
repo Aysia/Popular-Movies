@@ -1,90 +1,105 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_main_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.linux_girl.popularmovies.DetailFragment"
-    android:id="@+id/detail_main_container">
+    android:orientation="vertical"
+    tools:context="com.linux_girl.popularmovies.DetailFragment">
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/movie_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:paddingBottom="4dp"
-            android:textSize="@dimen/large_txt"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:padding="25dp"
-            android:background="@color/colorPrimary"
-            android:textColor="#FFFFFF"
-            android:text=""/>
+            android:layout_height="400dp"
+            android:background="@color/colorPrimaryDark">
+
+            <com.linux_girl.popularmovies.CustomLayout
+                android:id="@+id/movie_backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="340dp"
+                android:background="@color/colorPrimary700"
+                android:gravity="top" />
+
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_below="@id/movie_backdrop"
+                android:gravity="center_vertical"
+                android:paddingLeft="12dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fave_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/movie_backdrop"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="-32dp"
+                android:layout_marginRight="20dp"
+                android:clickable="true"
+                android:src="@drawable/ic_favorite_border_black_24dp" />
+
+        </RelativeLayout>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="12dp">
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Ratings: "
-                android:textSize="@dimen/small_txt"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:minWidth="185dp" />
 
-            <TextView
-                android:id="@+id/user_ratings"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/small_txt" />
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:paddingLeft="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Release Date: "
-                android:layout_marginLeft="16dp"
-                android:textSize="@dimen/small_txt" />
+                <TextView
+                    android:id="@+id/release_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:textAppearance="?android:textAppearanceLarge" />
 
-            <TextView
-                android:id="@+id/release_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/small_txt"/>
+                <TextView
+                    android:id="@+id/user_ratings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+                <TextView
+                    android:id="@+id/movie_plot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:textAppearance="?android:textAppearanceMedium" />
+
+            </LinearLayout>
         </LinearLayout>
 
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="280dp"
-            android:layout_gravity="center" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="12dp"
-            android:background="@android:color/darker_gray"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@string/title_plot_view"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:padding="12dp" />
-
-        <TextView
-            android:id="@+id/movie_plot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/normal_txt"
-            android:padding="12dp" />
-
-
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

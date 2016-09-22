@@ -9,7 +9,8 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:id="@+id/imageView"
-        android:minHeight="309dp"
-        android:minWidth="205dp" />
+        android:paddingBottom="6dp"
+        android:minHeight="250dp"
+        android:minWidth="185dp" />
 
 </LinearLayout>

@@ -17,8 +17,15 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_plot_view">Description</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="title_trailers">Trailers</string>
+    <string name="title_reviews">Reviews</string>
+
+    <string name="favorite_default">false</string>
+
+    <string name="empty_view_text">Please Select a Movie to begin</string>
+    <string name="empty_trailer_tex">No Trailers Found</string>
+    <string name="empty_review_text">No Reviews Found</string>
 
 
 </resources>
